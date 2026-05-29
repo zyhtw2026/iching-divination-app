@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build:hexagrams": "node scripts/build-hexagrams.mjs"
+    "build:hexagrams": "node scripts/build-hexagrams.mjs",
+    "build:strokes": "node scripts/build-moe-strokes.mjs"
   },
   "dependencies": {
     "react": "^19.2.6",

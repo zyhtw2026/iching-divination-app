@@ -138,7 +138,11 @@ function App() {
 
     const char = word.trim()
     if (!char) return
-
+// 只能輸入一個中文字
+if (!/^[\u4e00-\u9fff]$/.test(char)) {
+  alert('測字一次只能輸入一個中文字，例如：愛、財、變、婚')
+  return
+}
     const strokes = strokeMap[char]
 
     if (!strokes || hexagrams.length === 0) {
@@ -468,7 +472,7 @@ ${
 
             <input
               value={word}
-              onChange={(e) => setWord(e.target.value)}
+              onChange={(e) => setWord(e.target.value.slice(0, 1))}
               placeholder="例如：愛"
             />
           </>
