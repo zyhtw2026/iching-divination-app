@@ -78,6 +78,7 @@ function App() {
   const [aiInterpretation, setAiInterpretation] = useState('')
   const [loadingAI, setLoadingAI] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [showOriginalText, setShowOriginalText] = useState(false)
 
   const [divinationTime, setDivinationTime] = useState('')
   const [coinLines, setCoinLines] = useState([])
@@ -537,35 +538,59 @@ ${
                 </>
               )}
 
-              {result.divinationMode === 'coins' && result.coinLines && (
-                <div className="result-row">
-                  六爻結果：
-                  <div>
-                    {[...result.coinLines].reverse().map((line, index) => (
-                      <div key={index}>
-                        第{6 - index}爻：
-                        {line.isYang ? '━━━' : '━ ━'}　
-                        {line.lineType}
-                        {line.isChanging ? '（動爻）' : ''}
-                        ｜銅錢：{line.coins.join('、')}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+{result.divinationMode === 'coins' && result.coinLines && (
+  <div className="result-row coin-result">
+    <div className="coin-result-title">六爻結果：</div>
 
-              <div className="result-row">
-                象意：{result.hexagram?.meaning}
-              </div>
+    <div className="coin-lines">
+      {[...result.coinLines].reverse().map((line, index) => (
+        <div className="coin-line" key={index}>
+          <div className="coin-line-main">
+            第{6 - index}爻：{line.isYang ? '━━━' : '━ ━'} {line.lineType}
+            {line.isChanging ? '（動爻）' : ''}
+          </div>
 
-              <div className="result-row">
-                卦辭：{result.hexagram?.judgment}
-              </div>
+          <div className="coin-detail">
+            銅錢：{line.coins.join('、')}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+<div className="result-row">
+  <button
+    className="toggle-btn"
+    onClick={() => setShowOriginalText(!showOriginalText)}
+  >
+    {showOriginalText ? '▲ 收合易經原文' : '▼ 查看易經原文'}
+  </button>
+</div>
 
-              <div className="result-row">
-                象曰：{result.hexagram?.image}
-              </div>
+{showOriginalText && (
+  <>
+    <div className="section">
+      <div className="section-title">象意</div>
+      <div className="section-content">
+        {result.hexagram?.meaning}
+      </div>
+    </div>
 
+    <div className="section">
+      <div className="section-title">卦辭</div>
+      <div className="section-content">
+        {result.hexagram?.judgment}
+      </div>
+    </div>
+
+    <div className="section">
+      <div className="section-title">象曰</div>
+      <div className="section-content">
+        {result.hexagram?.image}
+      </div>
+    </div>
+  </>
+)}
               <div className="result-row">
                 建議：{result.hexagram?.advice}
               </div>

@@ -15,12 +15,13 @@ body {
 
 .title {
   text-align: center;
-  font-size: 72px;
+  font-size: 64px;
+  line-height: 1.15;
   color: #fff3d6;
   background: #e94b2f;
   border: 6px solid #fff3d6;
   border-radius: 28px;
-  padding: 16px 32px;
+  padding: 18px 32px;
   max-width: 620px;
   margin: 0 auto 32px;
   box-shadow: 0 8px 0 #9d2f20;
@@ -34,7 +35,8 @@ body {
   border: 5px solid #e94b2f;
   border-radius: 44px;
   padding: 32px 44px;
-  box-shadow: 0 12px 0 rgba(0,0,0,0.18);
+  box-shadow: 0 12px 0 rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
 }
 
 .label {
@@ -43,26 +45,41 @@ body {
   color: white;
   padding: 8px 18px;
   border-radius: 999px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 12px;
 }
 
-input {
+input,
+.question-select {
   width: 100%;
   box-sizing: border-box;
   padding: 18px;
-  font-size: 24px;
+  font-size: 22px;
   border: 3px solid #c28b52;
   border-radius: 24px;
   background: #fffaf0;
+  color: #2b2b2b;
   margin-bottom: 20px;
+  font-family: inherit;
+}
+
+.question-select {
+  cursor: pointer;
+}
+
+.question-select:focus,
+input:focus {
+  outline: none;
+  border-color: #e94b2f;
+  box-shadow: 0 0 0 4px rgba(233, 75, 47, 0.15);
 }
 
 button {
   display: block;
   margin: 20px auto 0;
-  padding: 18px 56px;
-  font-size: 28px;
+  padding: 16px 44px;
+  font-size: 22px;
   font-weight: bold;
   color: white;
   background: #e94b2f;
@@ -70,6 +87,7 @@ button {
   border-radius: 18px;
   box-shadow: 0 6px 0 #9d2f20;
   cursor: pointer;
+  font-family: inherit;
 }
 
 button:active {
@@ -77,51 +95,39 @@ button:active {
   box-shadow: 0 2px 0 #9d2f20;
 }
 
+.tarot-button {
+  margin-bottom: 36px;
+}
+
 .result-title {
   text-align: center;
-  font-size: 56px;
+  font-size: 44px;
+  line-height: 1.25;
   color: #e94b2f;
-  margin-bottom: 18px;
+  margin: 0 0 28px;
 }
 
 .result-row {
-  font-size: 28px;
-  border-bottom: 2px dashed #e94b2f;
-  padding: 12px 0;
+  font-size: 20px;
+  line-height: 1.8;
+  border-bottom: 2px dashed rgba(233, 75, 47, 0.75);
+  padding: 16px 0;
+  word-break: break-word;
+  white-space: pre-line;
 }
 
 .badge {
   margin-top: 28px;
-  padding: 16px;
+  padding: 14px 18px;
   border-radius: 999px;
   background: #168b8a;
   color: #fff3d6;
   text-align: center;
-  font-size: 22px;
+  font-size: 18px;
+  line-height: 1.5;
   font-weight: bold;
 }
-.question-select {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 18px;
-  font-size: 24px;
-  border: 3px solid #c28b52;
-  border-radius: 24px;
-  background: #fffaf0;
-  color: #2b2b2b;
-  margin-bottom: 20px;
-  cursor: pointer;
-  font-family: inherit;
-}
 
-.question-select:focus {
-  outline: none;
-  border-color: #e94b2f;
-  box-shadow: 0 0 0 4px rgba(233, 75, 47, 0.15);
-}
-.tarot-button {
-  margin-bottom: 36px;
-}
 .copy-btn {
   background: #f04b2b;
   color: white;
@@ -136,4 +142,161 @@ button:active {
 
 .copy-btn:hover {
   opacity: 0.9;
+}
+
+.coin-result-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.coin-lines {
+  margin-top: 12px;
+}
+
+.coin-line {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.25);
+}
+
+.coin-line:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.coin-line-main {
+  font-size: 20px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.coin-detail {
+  font-size: 17px;
+  line-height: 1.5;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 18px 10px 40px;
+  }
+
+  .title {
+    font-size: 44px;
+    line-height: 1.15;
+    padding: 24px 14px;
+    border-radius: 24px;
+    margin-bottom: 28px;
+  }
+
+  .panel,
+  .result-card {
+    width: 100%;
+    max-width: 360px;
+    padding: 26px 20px;
+    border-radius: 34px;
+  }
+
+  .label {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+
+  input,
+  .question-select {
+    font-size: 20px;
+    padding: 16px 18px;
+    border-radius: 22px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 20px;
+    padding: 16px 18px;
+    box-sizing: border-box;
+  }
+
+  .result-title {
+    font-size: 36px;
+    line-height: 1.28;
+    margin-bottom: 24px;
+  }
+
+  .result-row {
+    font-size: 18px;
+    line-height: 1.8;
+    padding: 14px 0;
+  }
+
+  .coin-result-title {
+    font-size: 20px;
+  }
+
+  .coin-line-main {
+    font-size: 18px;
+  }
+
+  .coin-detail {
+    font-size: 16px;
+  }
+
+  .badge {
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 12px 16px;
+  }
+
+  .copy-btn {
+    font-size: 17px;
+    padding: 14px 18px;
+  }
+}
+.toggle-btn {
+  width: 100%;
+  background: #168b8a;
+  box-shadow: none;
+  font-size: 18px;
+  padding: 14px;
+  border-radius: 14px;
+}
+
+.toggle-btn:hover {
+  opacity: 0.9;
+}
+
+.section {
+  margin: 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed rgba(0,0,0,0.15);
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e94b2f;
+  margin-bottom: 10px;
+}
+
+.section-content {
+  font-size: 18px;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+@media (max-width: 600px) {
+  .section-title {
+    font-size: 20px;
+  }
+
+  .section-content {
+    font-size: 17px;
+    line-height: 1.85;
+  }
+
+  .toggle-btn {
+    font-size: 16px;
+  }
 }
