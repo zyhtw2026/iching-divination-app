@@ -472,7 +472,7 @@ ${
 
             <input
               value={word}
-              onChange={(e) => setWord(e.target.value.slice)}
+              onChange={(e) => setWord(e.target.value)}
               placeholder="例如：愛"
             />
           </>
