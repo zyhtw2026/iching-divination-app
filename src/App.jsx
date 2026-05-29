@@ -80,6 +80,8 @@ function App() {
   const [copied, setCopied] = useState(false)
 
   const [divinationTime, setDivinationTime] = useState('')
+  const [coinLines, setCoinLines] = useState([])
+  const [coinHistory, setCoinHistory] = useState([])
 
   useEffect(() => {
     fetch('/data/moe-strokes.json')
