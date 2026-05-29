@@ -122,3 +122,18 @@ button:active {
 .tarot-button {
   margin-bottom: 36px;
 }
+.copy-btn {
+  background: #f04b2b;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.copy-btn:hover {
+  opacity: 0.9;
+}

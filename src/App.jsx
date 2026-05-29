@@ -12,11 +12,6 @@ const TRIGRAMS = [
   { name: '坤', symbol: '☷' },
 ]
 
-function getTrigramByNumber(number) {
-  const index = number % 8
-  return TRIGRAMS[index]
-}
-
 const BRANCHES = [
   { name: '子時', number: 1 },
   { name: '丑時', number: 2 },
@@ -31,6 +26,11 @@ const BRANCHES = [
   { name: '戌時', number: 11 },
   { name: '亥時', number: 12 },
 ]
+
+function getTrigramByNumber(number) {
+  const index = number % 8
+  return TRIGRAMS[index]
+}
 
 function getLowerTrigramFromUpperAndBranch(upperTrigram, branchNumber) {
   const upperIndex = TRIGRAMS.findIndex(
@@ -77,6 +77,7 @@ function App() {
   const [result, setResult] = useState(null)
   const [aiInterpretation, setAiInterpretation] = useState('')
   const [loadingAI, setLoadingAI] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const [divinationTime, setDivinationTime] = useState('')
 
@@ -99,6 +100,7 @@ function App() {
 
   function handleTarotDraw() {
     setAiInterpretation('')
+    setCopied(false)
 
     const isUpright = Math.random() > 0.5
 
@@ -129,6 +131,7 @@ function App() {
 
   function handleAnalyze() {
     setAiInterpretation('')
+    setCopied(false)
 
     const char = word.trim()
     if (!char) return
@@ -138,6 +141,7 @@ function App() {
     if (!strokes || hexagrams.length === 0) {
       setResult({
         question,
+        questionType,
         divinationMode,
         char,
         strokes: strokes || '尚未收錄',
@@ -220,6 +224,74 @@ function App() {
       setLoadingAI(false)
     }
   }
+
+  async function copyPrompt() {
+    if (!result?.hexagram) return
+
+    const prompt = `
+你是一位熟悉易經、能以現代白話文解讀卦象的老師。
+
+請根據以下資訊進行解讀：
+
+【我的問題】
+${result.question || '未填寫'}
+
+【問題類型】
+${result.questionType || questionType}
+
+【占卜方式】
+${result.divinationMode === 'ichingTarot' ? '易經塔羅卡' : '測字'}
+
+【卦象】
+第${result.hexagram.number}卦 ${result.hexagram.name}
+
+【象意】
+${result.hexagram.meaning}
+
+【卦辭】
+${result.hexagram.judgment}
+
+【象曰】
+${result.hexagram.image}
+
+【建議】
+${result.hexagram.advice}
+
+${
+  result.divinationMode === 'character'
+    ? `【測字資訊】
+測字：${result.char}
+筆畫：${result.strokes}
+上卦：${result.upperTrigram?.name} ${result.upperTrigram?.symbol}
+下卦：${result.lowerTrigram?.name} ${result.lowerTrigram?.symbol}
+時辰：${result.branch?.name}
+推算位數：${result.steps}`
+    : ''
+}
+
+請用繁體中文回答，並依照以下格式：
+
+1. 這個卦象真正想告訴我什麼？
+2. 我的問題核心盲點在哪裡？
+3. 現在適合行動嗎？
+4. 若行動，需要注意什麼？
+5. 未來三個月的建議方向
+6. 用一句話總結這個卦給我的提醒
+
+請避免宿命論與恐嚇式解讀，請用理性、溫柔、具體的方式說明。
+`
+
+    await navigator.clipboard.writeText(prompt)
+
+    setCopied(true)
+
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
+  }
+
+  const canShowResultContent =
+    result && !(result.divinationMode === 'ichingTarot' && result.isUpright === false)
 
   return (
     <div className="app">
@@ -307,15 +379,15 @@ function App() {
 
           <div className="result-row">問題：{result.question}</div>
 
-          {result.divinationMode === 'character' && (
+          {canShowResultContent && (
             <>
-              <div className="result-row">你測的字：{result.char}</div>
-              <div className="result-row">筆畫：{result.strokes}</div>
-            </>
-          )}
+              {result.divinationMode === 'character' && (
+                <>
+                  <div className="result-row">你測的字：{result.char}</div>
+                  <div className="result-row">筆畫：{result.strokes}</div>
+                </>
+              )}
 
-          {!(result.divinationMode === 'ichingTarot' && result.isUpright === false) && (
-            <>
               <div className="result-row">
                 象意：{result.hexagram?.meaning}
               </div>
@@ -339,14 +411,27 @@ function App() {
                 ] || '尚未建立此類型解讀'}
               </div>
 
-              <button onClick={generateAIInterpretation} disabled={loadingAI}>
-                {loadingAI ? 'AI 解牌中...' : '產生 AI 解牌'}
-              </button>
+              <div className="result-row">
+                <button className="copy-btn" onClick={copyPrompt}>
+                  {copied ? '✅ 已複製' : '📋 複製 AI 解卦 Prompt'}
+                </button>
+              </div>
 
-              {aiInterpretation && (
-                <div className="result-row">
-                  AI 解牌：{aiInterpretation}
-                </div>
+              {false && (
+                <>
+                  <button
+                    onClick={generateAIInterpretation}
+                    disabled={loadingAI}
+                  >
+                    {loadingAI ? 'AI 解牌中...' : '產生 AI 解牌'}
+                  </button>
+
+                  {aiInterpretation && (
+                    <div className="result-row">
+                      AI 解牌：{aiInterpretation}
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
