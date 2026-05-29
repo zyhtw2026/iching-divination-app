@@ -190,6 +190,124 @@ function App() {
     })
   }
 
+  function getTrigramFromLines(lines) {
+    const pattern = lines.map((line) => (line.isYang ? '1' : '0')).join('')
+
+    const map = {
+      '111': '乾',
+      '110': '兌',
+      '101': '離',
+      '100': '震',
+      '011': '巽',
+      '010': '坎',
+      '001': '艮',
+      '000': '坤',
+    }
+
+    return map[pattern]
+  }
+
+  function tossThreeCoins() {
+    const coins = Array.from({ length: 3 }, () =>
+      Math.random() > 0.5 ? '正' : '反'
+    )
+
+    const heads = coins.filter((coin) => coin === '正').length
+    const total = heads * 3 + (3 - heads) * 2
+
+    if (total === 6) {
+      return {
+        coins,
+        total,
+        lineType: '老陰',
+        isYang: false,
+        isChanging: true,
+      }
+    }
+
+    if (total === 7) {
+      return {
+        coins,
+        total,
+        lineType: '少陽',
+        isYang: true,
+        isChanging: false,
+      }
+    }
+
+    if (total === 8) {
+      return {
+        coins,
+        total,
+        lineType: '少陰',
+        isYang: false,
+        isChanging: false,
+      }
+    }
+
+    return {
+      coins,
+      total,
+      lineType: '老陽',
+      isYang: true,
+      isChanging: true,
+    }
+  }
+
+  function handleCoinToss() {
+    setAiInterpretation('')
+    setCopied(false)
+
+    if (hexagrams.length === 0) return
+    if (coinLines.length >= 6) return
+
+    const newLine = tossThreeCoins()
+    const updatedLines = [...coinLines, newLine]
+
+    setCoinLines(updatedLines)
+    setCoinHistory(updatedLines)
+
+    if (updatedLines.length === 6) {
+      const lowerLines = updatedLines.slice(0, 3)
+      const upperLines = updatedLines.slice(3, 6)
+
+      const lowerName = getTrigramFromLines(lowerLines)
+      const upperName = getTrigramFromLines(upperLines)
+
+      const lowerTrigram = TRIGRAMS.find((item) => item.name === lowerName)
+      const upperTrigram = TRIGRAMS.find((item) => item.name === upperName)
+
+      const hexagram =
+        hexagrams.find(
+          (item) => item.upper === upperName && item.lower === lowerName
+        ) || {
+          number: '',
+          name: `${upperName}${lowerName}`,
+          meaning: '此卦尚未收錄在 hexagrams.json，請補上完整卦象資料。',
+          advice: '請先確認上下卦對照是否已加入資料庫。',
+        }
+
+      setResult({
+        question,
+        questionType,
+        divinationMode: 'coins',
+        hexagram,
+        coinLines: updatedLines,
+        upperTrigram,
+        lowerTrigram,
+        time: divinationTime,
+      })
+    }
+  }
+
+  function resetCoinDivination() {
+    setCoinLines([])
+    setCoinHistory([])
+    setResult(null)
+    setAiInterpretation('')
+    setCopied(false)
+  }
+
   async function generateAIInterpretation() {
     if (!result?.hexagram) return
 
@@ -240,7 +358,7 @@ ${result.question || '未填寫'}
 ${result.questionType || questionType}
 
 【占卜方式】
-${result.divinationMode === 'ichingTarot' ? '易經塔羅卡' : '測字'}
+${result.divinationMode === 'ichingTarot' ? '易經塔羅卡' : result.divinationMode === 'coins' ? '銅錢六爻' : '測字'}
 
 【卦象】
 第${result.hexagram.number}卦 ${result.hexagram.name}
@@ -266,6 +384,17 @@ ${
 下卦：${result.lowerTrigram?.name} ${result.lowerTrigram?.symbol}
 時辰：${result.branch?.name}
 推算位數：${result.steps}`
+    : ''
+}
+
+${
+  result.divinationMode === 'coins'
+    ? `【銅錢六爻資訊】
+上卦：${result.upperTrigram?.name} ${result.upperTrigram?.symbol}
+下卦：${result.lowerTrigram?.name} ${result.lowerTrigram?.symbol}
+六爻：${result.coinLines
+        ?.map((line, index) => `第${index + 1}爻：${line.lineType}${line.isChanging ? '（動爻）' : ''}`)
+        .join('；')}`
     : ''
 }
 
@@ -359,6 +488,24 @@ ${
         {divinationMode === 'character' && (
           <button onClick={handleAnalyze}>開始測字</button>
         )}
+
+        {divinationMode === 'coins' && (
+          <>
+            <button onClick={handleCoinToss} disabled={coinLines.length >= 6}>
+              {coinLines.length >= 6
+                ? '起卦完成'
+                : `擲第 ${coinLines.length + 1} 爻`}
+            </button>
+
+            {coinLines.length > 0 && (
+              <button className="copy-btn" onClick={resetCoinDivination}>
+                重新起卦
+              </button>
+            )}
+
+            <div className="result-row">已擲出：{coinLines.length} / 6 爻</div>
+          </>
+        )}
       </div>
 
       {result && (
@@ -386,6 +533,23 @@ ${
                   <div className="result-row">你測的字：{result.char}</div>
                   <div className="result-row">筆畫：{result.strokes}</div>
                 </>
+              )}
+
+              {result.divinationMode === 'coins' && result.coinLines && (
+                <div className="result-row">
+                  六爻結果：
+                  <div>
+                    {[...result.coinLines].reverse().map((line, index) => (
+                      <div key={index}>
+                        第{6 - index}爻：
+                        {line.isYang ? '━━━' : '━ ━'}　
+                        {line.lineType}
+                        {line.isChanging ? '（動爻）' : ''}
+                        ｜銅錢：{line.coins.join('、')}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
 
               <div className="result-row">
@@ -461,6 +625,18 @@ ${
 
               <div className="result-row">
                 推算位數：{result.branch?.number % 8}
+              </div>
+            </>
+          )}
+
+          {result.divinationMode === 'coins' && (
+            <>
+              <div className="result-row">
+                上卦：{result.upperTrigram?.name} {result.upperTrigram?.symbol}
+              </div>
+
+              <div className="result-row">
+                下卦：{result.lowerTrigram?.name} {result.lowerTrigram?.symbol}
               </div>
             </>
           )}
