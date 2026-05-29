@@ -674,8 +674,11 @@ ${
 
           {result.divinationMode !== 'ichingTarot' && (
             <div className="badge">
-              占測時間：{result.time || '未選擇'}
-            </div>
+            占測時間：
+            {result.time
+              ? result.time.replace('T', ' ').replace(/-/g, '/')
+              : '未選擇'}
+          </div>
           )}
         </div>
       )}
