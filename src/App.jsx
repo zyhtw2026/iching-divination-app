@@ -405,11 +405,22 @@ ${
               </div>
 
               <div className="result-row">
-                白話解讀：
-                {interprets[result.hexagram?.number]?.[
-                  result.questionType || questionType
-                ] || '尚未建立此類型解讀'}
-              </div>
+  白話解讀：
+  {(() => {
+    const type = result.questionType || questionType
+    const savedText = interprets[result.hexagram?.number]?.[type]
+
+    if (savedText && !savedText.includes('尚未建立')) {
+      return savedText
+    }
+
+    return `這一卦的核心提醒是：「${result.hexagram?.meaning || '先觀察局勢，不宜急躁。'}」
+
+如果用在你的問題上，可以先把它理解為：目前不要只看表面結果，而是要回到局勢本身，判斷現在適合推進、等待、整理，還是重新調整方向。
+
+具體建議是：${result.hexagram?.advice || '先穩住狀態，再判斷下一步。'}`
+  })()}
+</div>
 
               <div className="result-row">
                 <button className="copy-btn" onClick={copyPrompt}>
