@@ -138,6 +138,7 @@ function App() {
 
     const char = word.trim()
     if (!char) return
+    
 // 只能輸入一個中文字
 if (!/^[\u4e00-\u9fff]$/.test(char)) {
   alert('測字一次只能輸入一個中文字，例如：愛、財、變、婚')
@@ -486,9 +487,10 @@ ${
 
         {divinationMode !== 'ichingTarot' && (
           <input
-            type="datetime-local"
-            value={divinationTime}
-            onChange={(e) => setDivinationTime(e.target.value)}
+          className="datetime-input"
+          type="datetime-local"
+          value={divinationTime}
+          onChange={(e) => setDivinationTime(e.target.value)}
           />
         )}
 
@@ -675,9 +677,9 @@ ${
           {result.divinationMode !== 'ichingTarot' && (
             <div className="badge">
             占測時間：
-            {result.time
-              ? result.time.replace('T', ' ').replace(/-/g, '/')
-              : '未選擇'}
+{result.time
+  ? result.time.replace('T', ' ')
+  : '未選擇'}
           </div>
           )}
         </div>
