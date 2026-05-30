@@ -469,7 +469,12 @@ ${
 
         {divinationMode === 'character' && (
           <>
-            <div className="label">請輸入一個字</div>
+            <div className="label">請輸入</div>
+
+            <div className="measure-word-tip">
+      💡 先在心中默念問題，再輸入第一個直覺想到的字（例如：愛、財、變、婚、家、業）。
+      系統會依筆畫與占測時間推算卦象。
+    </div>
 
             <input
               value={word}
@@ -485,14 +490,20 @@ ${
           </button>
         )}
 
-        {divinationMode !== 'ichingTarot' && (
-          <input
-          className="datetime-input"
-          type="datetime-local"
-          value={divinationTime}
-          onChange={(e) => setDivinationTime(e.target.value)}
-          />
-        )}
+{divinationMode !== 'ichingTarot' && (
+  <>
+    <div className="hint-text">
+      請選擇你開始占測的時間。
+    </div>
+
+    <input
+      className="datetime-input"
+      type="datetime-local"
+      value={divinationTime}
+      onChange={(e) => setDivinationTime(e.target.value)}
+    />
+  </>
+)}
 
         {divinationMode === 'character' && (
           <button onClick={handleAnalyze}>開始測字</button>
