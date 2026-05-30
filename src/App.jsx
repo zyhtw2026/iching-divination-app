@@ -80,7 +80,13 @@ function App() {
   const [copied, setCopied] = useState(false)
   const [showOriginalText, setShowOriginalText] = useState(false)
 
-  const [divinationTime, setDivinationTime] = useState('')
+  const [divinationTime, setDivinationTime] = useState(() => {
+    const now = new Date()
+    const offset = now.getTimezoneOffset()
+    const localTime = new Date(now.getTime() - offset * 60000)
+  
+    return localTime.toISOString().slice(0, 16)
+  })
   const [coinLines, setCoinLines] = useState([])
   const [coinHistory, setCoinHistory] = useState([])
 
