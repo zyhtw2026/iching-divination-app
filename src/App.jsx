@@ -80,7 +80,7 @@ function App() {
   const [copied, setCopied] = useState(false)
   const [showOriginalText, setShowOriginalText] = useState(false)
 
-  const [divinationTime, setDivinationTime] = useState(() => {
+  const [divinationTime] = useState(() => {
     const now = new Date()
     const offset = now.getTimezoneOffset()
     const localTime = new Date(now.getTime() - offset * 60000)
@@ -495,21 +495,6 @@ ${
             抽一張易經塔羅卡
           </button>
         )}
-
-{divinationMode !== 'ichingTarot' && (
-  <>
-    <div className="hint-text">
-      請選擇你開始占測的時間。
-    </div>
-
-    <input
-      className="datetime-input"
-      type="datetime-local"
-      value={divinationTime}
-      onChange={(e) => setDivinationTime(e.target.value)}
-    />
-  </>
-)}
 
         {divinationMode === 'character' && (
           <button onClick={handleAnalyze}>開始測字</button>
